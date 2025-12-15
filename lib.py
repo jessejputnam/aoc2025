@@ -9,6 +9,8 @@ session_id = os.getenv("SESSION_ID", "")
 
 
 def clean_data(data: str, splitVal: str) -> list[str]:
+    """Cleans the input data by splitting it using the specified delimiter
+    and stripping whitespace from each element."""
     try:
         return [x.strip() for x in data.split(splitVal) if len(x.strip()) > 0]
     except Exception as e:
@@ -17,6 +19,8 @@ def clean_data(data: str, splitVal: str) -> list[str]:
 
 
 def get_data(day: int, splitVal: str) -> list[str]:
+    """Fetches the input data for the specified day from the Advent of Code website
+    using the session ID for authentication."""
     url = f"https://adventofcode.com/2025/day/{day}/input"
     cookie = {"session": session_id}
 
@@ -29,6 +33,7 @@ def get_data(day: int, splitVal: str) -> list[str]:
 
 
 def get_test_data(day: int, splitVal: str) -> list[str]:
+    """Fetches the test data for the specified day from a local JSON file."""
     try:
         with open("test_data/db.json", "r") as file:
             data = json.load(file)
@@ -39,5 +44,6 @@ def get_test_data(day: int, splitVal: str) -> list[str]:
         raise
 
 
-def printf(o) -> None:
+def printf(o: object) -> None:
+    """Prints the given object in a formatted JSON style for better readability."""
     print(json.dumps(o, indent=2))
