@@ -32,7 +32,9 @@ def clean_data_multipart(data: str, split_val: str) -> list[list[str]]:
         raise
 
 
-def get_data(day: int, split_val: str, type: str = "full") -> list[str]:
+def get_data(
+    day: int, split_val: str, type: str = "full", raw: bool = False
+) -> list[str]:
     """Fetches the input data for the specified day"""
     url = f"https://adventofcode.com/2025/day/{day}/input"
     cookie = {"session": session_id}
@@ -40,11 +42,15 @@ def get_data(day: int, split_val: str, type: str = "full") -> list[str]:
     try:
         if type == "test":
             with open("test_data/db.json", "r") as file:
-                data = json.load(file)
+                data: dict[str, str] = json.load(file)
                 key = f"day{str(day).zfill(2)}"
+                if raw:
+                    return [data[key]]
                 return clean_data(data[key], split_val)
         else:
             response = requests.get(url, cookies=cookie)
+            if raw:
+                return [response.text]
             return clean_data(response.text, split_val)
     except Exception as e:
         print(f"Error fetching data: {e}")
